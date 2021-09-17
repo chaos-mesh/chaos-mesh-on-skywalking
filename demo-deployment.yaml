@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-skywalking-demo
+  namespace: skywalking
+  labels:
+    app: spring-boot-skywalking-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-skywalking-demo
+  template:
+    metadata:
+      labels:
+        app: spring-boot-skywalking-demo
+    spec:
+      initContainers:
+        - image: ghcr.io/apache/skywalking-java/skywalking-java:latest
+          name: sw-agent-sidecar
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh" ]
+          args:
+            [
+                "-c",
+                "cp -R /skywalking/agent /agent/",
+            ]
+          volumeMounts:
+            - mountPath: /agent
+              name: sw-agent
+      containers:
+        - name: spring-boot-skywalking-demo
+          image: springio/gs-spring-boot-docker
+          imagePullPolicy: Always
+          env:
+            - name: NAMESPACE
+              value: skywalking
+            - name: JAVA_TOOL_OPTIONS
+              value: -javaagent:/skywalking/agent/skywalking-agent.jar
+            - name: SW_AGENT_NAME
+              value: spring-boot-skywalking-demo
+            - name: SW_AGENT_COLLECTOR_BACKEND_SERVICES
+              value: skywalking-oap.skywalking.svc:11800
+            - name: SW_AGENT_INSTANCE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 200m
+              memory: 500Mi
+          volumeMounts:
+            - mountPath: /skywalking
+              name: sw-agent
+      volumes:
+        - name: sw-agent
+          emptyDir: { }
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-skywalking-demo
+  namespace: skywalking
+  labels:
+    app: spring-boot-skywalking-demo
+spec:
+  ports:
+    - port: 8080
+  selector:
+    app: spring-boot-skywalking-demo
+  type: ClusterIP
