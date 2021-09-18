@@ -2,7 +2,7 @@
 
 ## How to run a demo?
 
-Tips: You can change configurations as needed, especially the demo images and exporter. Because we can not use go template to slice `Service` and `Service Instance`,  the length depends on your namespace's name and  pod's name.
+Tips: You can change configurations as needed, especially the Spring demo and exporter. Because we can not use go template to slice `service` and `serviceInstance`,  these two fileds's length depends on your namespace's name and  pod's name.
 
 ### Step 1: Install SkyWalking
 
