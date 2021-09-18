@@ -21,7 +21,7 @@ helm install "${SKYWALKING_RELEASE_NAME}" ${REPO}/skywalking -n "${SKYWALKING_RE
 
 ```
 
-### Step 2: Deploy Spring Demo and Exporter
+### Step 2: Deploy Spring Boot Demo and Exporter
 
 ```
 git clone https://github.com/FingerLeader/chaos-mesh-on-skywalking.git
