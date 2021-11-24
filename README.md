@@ -9,13 +9,14 @@ Tips: You can change configurations as needed, especially the Spring demo and ex
 ```
 export SKYWALKING_RELEASE_NAME=skywalking  # change the release name according to your scenario
 export SKYWALKING_RELEASE_NAMESPACE=skywalking  # change the namespace to where you want to install SkyWalking
+kubectl create ns skywalking
 export REPO=skywalking
 helm repo add ${REPO} https://apache.jfrog.io/artifactory/skywalking-helm 
 helm install "${SKYWALKING_RELEASE_NAME}" ${REPO}/skywalking -n "${SKYWALKING_RELEASE_NAMESPACE}" \
-  --set oap.image.tag=8.7.0-es7 \
-  --set oap.storageType=elasticsearch7 \
-  --set ui.image.tag=8.7.0 \
-  --set elasticsearch.imageTag=7.5.1 \
+  --set oap.image.tag=8.8.1 \
+  --set oap.storageType=elasticsearch \
+  --set ui.image.tag=8.8.1 \
+  --set elasticsearch.imageTag=6.8.6 \
   --set elasticsearch.minimumMasterNodes=1 \
   --set elasticsearch.replicas=1
 
